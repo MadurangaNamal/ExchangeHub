@@ -15,6 +15,8 @@ builder.Services.AddHttpClient<ExchangeRateService>(client =>
     client.BaseAddress = new Uri($"{baseUrl}/{apiKey}/");
 });
 
+builder.Services.AddScoped<IExchangeRateService, ExchangeRateService>();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
