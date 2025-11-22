@@ -1,5 +1,36 @@
 ﻿@inherits LayoutComponentBase
 
+<nav class="navbar navbar-expand-lg navbar-dark-custom py-2">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <span class="feature-icon me-2" style="width: 36px; height: 36px;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 20px; height: 20px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </span>
+            <span class="fw-bold text-secondary mb-3">ExchangeHub</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/converter">Converter</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/rates">All Rates</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <div class="page">
     <main>
         <article class="content px-4">

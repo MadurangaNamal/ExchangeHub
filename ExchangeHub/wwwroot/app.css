@@ -1,5 +1,21 @@
+:root {
+    --bg-primary: #0a1628;
+    --bg-secondary: #111d33;
+    --bg-card: #162033;
+    --bg-card-hover: #1a2740;
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+    --accent-yellow: #facc15;
+    --accent-yellow-hover: #fbbf24;
+    --border-color: #1e3a5f;
+}
+
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    margin: 0;
 }
 
 a, .btn-link {
@@ -13,7 +29,7 @@ a, .btn-link {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 .content {
@@ -58,3 +74,137 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+/* //////////////////////////////////////// */
+
+/* Card Styles */
+.card-dark {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+    .card-dark:hover {
+        background-color: var(--bg-card-hover);
+        transform: translateY(-2px);
+    }
+
+/* Button Styles */
+.btn-accent {
+    background-color: var(--accent-yellow);
+    color: var(--bg-primary);
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+    .btn-accent:hover {
+        background-color: var(--accent-yellow-hover);
+        color: var(--bg-primary);
+    }
+
+.btn-outline-light {
+    border: 1px solid var(--text-secondary);
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+    .btn-outline-light:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+    }
+
+/* Text Utilities */
+.text-secondary-custom {
+    color: var(--text-secondary);
+}
+
+.text-accent {
+    color: var(--accent-yellow);
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+
+/* Input Styles */
+.form-control-dark {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+}
+
+    .form-control-dark:focus {
+        background-color: var(--bg-card);
+        border-color: var(--accent-yellow);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.2rem rgba(250, 204, 21, 0.25);
+    }
+
+    .form-control-dark::placeholder {
+        color: var(--text-secondary);
+    }
+
+.form-select-dark {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+}
+
+    .form-select-dark:focus {
+        background-color: var(--bg-card);
+        border-color: var(--accent-yellow);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.2rem rgba(250, 204, 21, 0.25);
+    }
+
+/* Navigation */
+.navbar-dark-custom {
+    background-color: rgba(10, 22, 40, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Feature Cards */
+.feature-icon {
+    width: 48px;
+    height: 48px;
+    background-color: var(--accent-yellow);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+    .feature-icon svg {
+        width: 24px;
+        height: 24px;
+        color: var(--bg-primary);
+    }
