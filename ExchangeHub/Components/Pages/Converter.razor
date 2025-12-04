@@ -1,7 +1,144 @@
-﻿@page "/converter"
+﻿@rendermode InteractiveServer
+@page "/converter"
+@inject IExchangeRateService exchangeRateService;
 
-<h3>Converter</h3>
+<PageTitle>ExchangeHub</PageTitle>
+
+<div class="container">
+    <div class="row g-4 justify-content-center mb-5">
+        <div class="col-md-6 col-lg-5">
+            <div class="card-dark h-100">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="feature-icon me-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                    </div>
+                    <h4 class="mb-3">Quick Convert</h4>
+                </div>
+                <p class="text-secondary-custom mb-4">
+                    Convert between currencies instantly with real-time exchange rates.
+                </p>
+
+                <div class="mb-3">
+                    <label class="form-label text-secondary-custom">Amount</label>
+                    <input type="number" class="form-control form-control-dark" @bind="Amount" placeholder="Enter amount" />
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-5">
+                        <label class="form-label text-secondary-custom">From</label>
+                        <select class="form-select form-select-dark" @bind="FromCurrency">
+                            @foreach (var currency in PopularCurrencies)
+                            {
+                                <option value="@currency">@currency</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-2 d-flex align-items-end justify-content-center pb-2">
+                        <button class="btn btn-outline-light btn-sm" @onclick="SwapCurrencies">
+                            ⇄
+                        </button>
+                    </div>
+                    <div class="col-5">
+                        <label class="form-label text-secondary-custom">To</label>
+                        <select class="form-select form-select-dark" @bind="ToCurrency">
+                            @foreach (var currency in PopularCurrencies)
+                            {
+                                <option value="@currency">@currency</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn btn-accent w-100" @onclick="ConvertCurrency" disabled="@IsLoading">
+                    @if (IsLoading)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                    }
+                    Convert
+                </button>
+
+                @if (ConversionResult.HasValue)
+                {
+                    <div class="mt-4 p-3 rounded" style="background-color: var(--bg-primary);">
+                        <p class="text-secondary-custom mb-1">Result</p>
+                        <h3 class="text-accent mb-0">
+                            @Amount @FromCurrency = @ConversionResult.Value.ToString("N2") @ToCurrency
+                        </h3>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
 
+    private decimal Amount { get; set; } = 1;
+    private string FromCurrency { get; set; } = "AED";
+    private string ToCurrency { get; set; } = "LKR";
+    private string BaseCurrency { get; set; } = "AED";
+    private decimal? ConversionResult { get; set; }
+    private bool IsLoading { get; set; }
+    private bool IsLoadingRates { get; set; }
+    private ExchangeRateStandardResponse? CurrentRates { get; set; }
+
+    private List<string> PopularCurrencies = new()
+    {
+        "USD", "AED", "EUR", "GBP", "JPY", "AUD", "LKR", "CHF", "CNY", "INR"
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRates();
+
+        StateHasChanged();
+    }
+
+    private async Task LoadRates()
+    {
+        IsLoadingRates = true;
+
+        try
+        {
+            CurrentRates = await exchangeRateService.GetLatestRatesAsync(BaseCurrency);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            IsLoadingRates = false;
+        }
+    }
+
+    private async Task ConvertCurrency()
+    {
+        IsLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            ConversionResult = await exchangeRateService.ConvertAsync(FromCurrency, ToCurrency, Amount);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+
+        StateHasChanged();
+    }
+
+    private void SwapCurrencies()
+    {
+        (FromCurrency, ToCurrency) = (ToCurrency, FromCurrency);
+
+        StateHasChanged();
+    }
 }

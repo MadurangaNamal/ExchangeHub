@@ -1,8 +1,95 @@
-﻿@page "/"
+﻿@rendermode InteractiveServer
+@page "/"
 @inject IExchangeRateService exchangeRateService;
 
 <PageTitle>ExchangeHub</PageTitle>
 
-@code {
+<div class="hero-section">
+    <div class="container">
+        <h1 class="hero-title">
+            The Best <span class="text-accent">Currency Exchange</span><br />
+            Tool for Your Needs
+        </h1>
+        <p class="hero-subtitle">
+            Get real-time exchange rates for 160+ currencies. Fast, reliable, and easy to use
+            for all your currency conversion needs.
+        </p>
+    </div>
+</div>
 
+<div class="container">
+    <div class="row g-4 justify-content-center mb-5">
+        <div class="col-12 col-lg-10 col-xl-9 col-xxl-8">
+            <div class="card-dark h-100 p-4 p-lg-5">
+
+                <div class="d-flex align-items-center mb-4">
+                    <div class="feature-icon me-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                    </div>
+                    <h4 class="mb-3">Live Exchange Rates</h4>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-secondary-custom small">Base Currency</label>
+                    <select class="form-select form-select-dark w-50" @bind="BaseCurrency" @bind:after="LoadRates">
+                        @foreach (var currency in PopularCurrencies)
+                        {
+                            <option value="@currency">@currency</option>
+                        }
+                    </select>
+                </div>
+
+                @if (IsLoadingRates)
+                {
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-warning" style="width: 3rem; height: 3rem;"></div>
+                    </div>
+                }
+                else if (CurrentRates != null)
+                {
+                    <div class="row g-3">
+                        @foreach (var currency in PopularCurrencies.Where(c => c != BaseCurrency))
+                        {
+                            if (CurrentRates.ConversionRates.TryGetValue(currency, out var rate))
+                            {
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                                    <div class="d-flex justify-content-between align-items-center py-3 border-bottom border-opacity-25">
+                                        <span class="text-secondary-custom">@BaseCurrency → @currency</span>
+                                        <strong class="text-accent fs-5">@rate.ToString("N4")</strong>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private string BaseCurrency { get; set; } = "AED";
+    private bool IsLoadingRates { get; set; }
+    private ExchangeRateStandardResponse? CurrentRates { get; set; }
+
+    private List<string> PopularCurrencies = new()
+    {
+        "LKR", "USD", "EUR", "GBP", "JPY", "AUD", "CAD", "CHF", "CNY", "INR", "AED"
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRates();
+    }
+
+    private async Task LoadRates()
+    {
+        IsLoadingRates = true;
+        CurrentRates = await exchangeRateService.GetLatestRatesAsync(BaseCurrency);
+        IsLoadingRates = false;
+    }
 }

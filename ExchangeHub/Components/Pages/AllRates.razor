@@ -1,6 +1,8 @@
-﻿@page "/rates"
+﻿@rendermode InteractiveServer
+@page "/rates"
+@inject IExchangeRateService exchangeRateService;
 
-<h3>All Rates</h3>
+<PageTitle>ExchangeHub</PageTitle>
 
 @code {
 

@@ -7,15 +7,12 @@ builder.Configuration.AddUserSecrets<Program>();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddHttpClient<ExchangeRateService>(client =>
+builder.Services.AddHttpClient<IExchangeRateService, ExchangeRateService>(client =>
 {
-    var baseUrl = builder.Configuration["ExchangeRateApi:BaseUrl"];
-    var apiKey = builder.Configuration["exchangerateapi-api-key"];
-
-    client.BaseAddress = new Uri($"{baseUrl}/{apiKey}/");
+    var baseUrl = builder.Configuration["ExchangeRateApi:BaseUrl"] ?? throw new InvalidOperationException("Missing ExchangeRateApi:BaseUrl");
+    var apiKey = builder.Configuration["exchangerateapi-api-key"] ?? throw new InvalidOperationException("Missing exchangerateapi-api-key");
+    client.BaseAddress = new Uri($"{baseUrl.TrimEnd('/')}/{apiKey}/");
 });
-
-builder.Services.AddScoped<IExchangeRateService, ExchangeRateService>();
 
 var app = builder.Build();
 

@@ -16,10 +16,21 @@ public class ExchangeRateService : IExchangeRateService
     {
         var response = await _httpClient.GetAsync($"latest/{baseCurrency}");
 
-        if(!response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
             return null;
 
         var content = await response.Content.ReadAsStringAsync();
+
         return JsonSerializer.Deserialize<ExchangeRateStandardResponse>(content);
+    }
+
+    public async Task<decimal?> ConvertAsync(string from, string to, decimal amount)
+    {
+        var rates = await GetLatestRatesAsync(from);
+
+        if (rates?.ConversionRates.TryGetValue(to, out var rate) == true)
+            return amount * rate;
+
+        return null;
     }
 }
