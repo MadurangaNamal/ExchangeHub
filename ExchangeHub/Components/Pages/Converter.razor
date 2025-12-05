@@ -28,7 +28,7 @@
                 <div class="row mb-3">
                     <div class="col-5">
                         <label class="form-label text-secondary-custom">From</label>
-                        <select class="form-select form-select-dark" @bind="FromCurrency">
+                        <select class="form-select form-select-dark" @bind="FromCurrency" @bind:event="onchange">
                             @foreach (var currency in PopularCurrencies)
                             {
                                 <option value="@currency">@currency</option>
@@ -42,7 +42,7 @@
                     </div>
                     <div class="col-5">
                         <label class="form-label text-secondary-custom">To</label>
-                        <select class="form-select form-select-dark" @bind="ToCurrency">
+                        <select class="form-select form-select-dark" @bind="ToCurrency" @bind:event="onchange">
                             @foreach (var currency in PopularCurrencies)
                             {
                                 <option value="@currency">@currency</option>
@@ -76,8 +76,37 @@
 @code {
 
     private decimal Amount { get; set; } = 1;
-    private string FromCurrency { get; set; } = "AED";
-    private string ToCurrency { get; set; } = "LKR";
+
+    private string _fromCurrency = "AED";
+
+    private string FromCurrency
+    {
+        get => _fromCurrency;
+        set
+        {
+            if (_fromCurrency != value)
+            {
+                _fromCurrency = value;
+                ClearResult();
+            }
+        }
+    }
+
+    private string _toCurrency = "LKR";
+
+    private string ToCurrency
+    {
+        get => _toCurrency;
+        set
+        {
+            if (_toCurrency != value)
+            {
+                _toCurrency = value;
+                ClearResult();
+            }
+        }
+    }
+
     private string BaseCurrency { get; set; } = "AED";
     private decimal? ConversionResult { get; set; }
     private bool IsLoading { get; set; }
@@ -111,8 +140,13 @@
     private void SwapCurrencies()
     {
         (FromCurrency, ToCurrency) = (ToCurrency, FromCurrency);
-        ConversionResult = null!;
+        ClearResult();
 
         StateHasChanged();
+    }
+
+    private void ClearResult()
+    {
+        ConversionResult = null;
     }
 }
