@@ -55,8 +55,15 @@
                             if (CurrentRates.ConversionRates.TryGetValue(currency, out var rate))
                             {
                                 <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                                    <div class="d-flex justify-content-between align-items-center py-3 border-bottom border-opacity-25">
-                                        <span class="text-secondary-custom">@BaseCurrency → @currency</span>
+                                    <div class="d-flex justify-content-between align-items-center py-3 px-3 rounded"
+                                         style="background-color: var(--bg-secondary);">
+                                        <div class="d-flex align-items-center gap-2">
+                                            @if (CurrencyToCountryMap.TryGetValue(currency, out var countryCode))
+                                            {
+                                                <span class="fi fi-@countryCode" style="font-size: 1.5rem;"></span>
+                                            }
+                                            <span class="fw-semibold">@currency</span>
+                                        </div>
                                         <strong class="text-accent fs-5">@rate.ToString("N4")</strong>
                                     </div>
                                 </div>
@@ -79,6 +86,21 @@
     private List<string> PopularCurrencies = new()
     {
         "LKR", "USD", "EUR", "GBP", "JPY", "AUD", "CAD", "CHF", "CNY", "INR", "AED"
+    };
+
+    private Dictionary<string, string> CurrencyToCountryMap = new()
+    {
+        { "LKR", "lk" },
+        { "USD", "us" },
+        { "EUR", "eu" },
+        { "GBP", "gb" },
+        { "JPY", "jp" },
+        { "AUD", "au" },
+        { "CAD", "ca" },
+        { "CHF", "ch" },
+        { "CNY", "cn" },
+        { "INR", "in" },
+        { "AED", "ae" }
     };
 
     protected override async Task OnInitializedAsync()
