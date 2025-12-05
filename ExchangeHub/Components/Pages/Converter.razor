@@ -81,37 +81,11 @@
     private string BaseCurrency { get; set; } = "AED";
     private decimal? ConversionResult { get; set; }
     private bool IsLoading { get; set; }
-    private bool IsLoadingRates { get; set; }
-    private ExchangeRateStandardResponse? CurrentRates { get; set; }
 
     private List<string> PopularCurrencies = new()
     {
         "USD", "AED", "EUR", "GBP", "JPY", "AUD", "LKR", "CHF", "CNY", "INR"
     };
-
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadRates();
-        StateHasChanged();
-    }
-
-    private async Task LoadRates()
-    {
-        IsLoadingRates = true;
-
-        try
-        {
-            CurrentRates = await exchangeRateService.GetLatestRatesAsync(BaseCurrency);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-        }
-        finally
-        {
-            IsLoadingRates = false;
-        }
-    }
 
     private async Task ConvertCurrency()
     {
@@ -138,6 +112,7 @@
     {
         (FromCurrency, ToCurrency) = (ToCurrency, FromCurrency);
         ConversionResult = null!;
+
         StateHasChanged();
     }
 }

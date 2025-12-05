@@ -28,7 +28,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                         </svg>
                     </div>
-                    <h4 class="mb-3">Live Exchange Rates</h4>
+                    <h4 class="mb-3">Quick Exchange Rates</h4>
                 </div>
 
                 <div class="mb-4">
@@ -111,7 +111,18 @@
     private async Task LoadRates()
     {
         IsLoadingRates = true;
-        CurrentRates = await exchangeRateService.GetLatestRatesAsync(BaseCurrency);
-        IsLoadingRates = false;
+
+        try
+        {
+            CurrentRates = await exchangeRateService.GetLatestRatesAsync(BaseCurrency);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            IsLoadingRates = false;
+        }
     }
 }

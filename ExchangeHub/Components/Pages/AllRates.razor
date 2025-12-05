@@ -4,6 +4,56 @@
 
 <PageTitle>ExchangeHub</PageTitle>
 
+<div class="container-fluid">
+    <div class="row g-4 justify-content-center mb-5">
+        <div class="col-12">
+            <div class="card-dark h-100 p-4 p-lg-5">
+                <div class="d-flex align-items-center mb-2">
+                    <span class="live-indicator me-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
+                            <circle cx="12" cy="12" r="10" fill="rgba(34,197,94,0.15)" />
+                            <circle cx="12" cy="12" r="5" fill="#22c55e" />
+                        </svg>
+                    </span>
+                    <h4 class="mb-0">Live Rates</h4>
+                </div>
+                <p class="text-secondary-custom mb-2">
+                   Updated On: @LastUpdatedOn
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 @code {
+    private string BaseCurrency { get; set; } = "USD";
+    private bool IsLoadingRates { get; set; }
+    private ExchangeRateStandardResponse? CurrentRates { get; set; }
+
+    private DateTime? LastUpdatedOn => CurrentRates != null
+        ? DateTimeOffset.FromUnixTimeSeconds(CurrentRates.TimeLastUpdateUnix).DateTime
+        : null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRates();
+    }
+
+    private async Task LoadRates()
+    {
+        IsLoadingRates = true;
+
+        try
+        {
+            CurrentRates = await exchangeRateService.GetLatestRatesAsync(BaseCurrency);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            IsLoadingRates = false;
+        }
+    }
 
 }
