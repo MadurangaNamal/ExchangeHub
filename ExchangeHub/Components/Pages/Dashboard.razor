@@ -84,12 +84,12 @@
     private bool IsLoadingRates { get; set; }
     private ExchangeRateStandardResponse? CurrentRates { get; set; }
 
-    private List<string> PopularCurrencies = new()
+    private readonly List<string> PopularCurrencies = new()
     {
         "LKR", "USD", "EUR", "GBP", "JPY", "AUD", "CAD", "CHF", "CNY", "INR", "AED"
     };
 
-    private Dictionary<string, string> CurrencyToCountryMap = new()
+    private readonly Dictionary<string, string> CurrencyToCountryMap = new()
     {
         { "LKR", "lk" },
         { "USD", "us" },
