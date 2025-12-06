@@ -1,6 +1,7 @@
 ﻿@rendermode InteractiveServer
 @page "/rates"
 @inject IExchangeRateService exchangeRateService;
+@inject NavigationManager navigationManager;
 
 <PageTitle>ExchangeHub</PageTitle>
 
@@ -18,8 +19,36 @@
                     <h4 class="mb-0">Live Rates</h4>
                 </div>
                 <p class="text-secondary-custom mb-2">
-                   Updated On: @LastUpdatedOn
+                    Updated On: @LastUpdatedOn
                 </p>
+                <p class="hero-subtitle m-0">
+                    @BaseCurrency
+                </p>
+
+                @if (IsLoadingRates)
+                {
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-warning" style="width: 3rem; height: 3rem;"></div>
+                    </div>
+                }
+                else if (CurrentRates != null)
+                {
+                    <div class="row g-3 m-1">
+                        @foreach (var currency in CurrentRates.ConversionRates.Where(rate => rate.Key != BaseCurrency))
+                        {
+                            if (CurrentRates.ConversionRates.TryGetValue(currency.Key, out var rate))
+                            {
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                                    <div class="d-flex justify-content-between align-items-center py-3 px-3 rounded"
+                                         style="background-color: var(--bg-secondary);">
+                                        <span class="fw-semibold">@currency.Key</span>
+                                        <strong class="text-accent fs-5">@rate.ToString("N3")</strong>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -48,12 +77,12 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            var encoded = Uri.EscapeDataString(ex.Message ?? "An error occurred");
+            navigationManager.NavigateTo($"/error?message={encoded}");
         }
         finally
         {
             IsLoadingRates = false;
         }
     }
-
 }

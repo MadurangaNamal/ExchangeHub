@@ -1,6 +1,7 @@
 ﻿@rendermode InteractiveServer
 @page "/converter"
 @inject IExchangeRateService exchangeRateService;
+@inject NavigationManager navigationManager;
 
 <PageTitle>ExchangeHub</PageTitle>
 
@@ -64,7 +65,7 @@
                     <div class="mt-4 p-3 rounded" style="background-color: var(--bg-primary);">
                         <p class="text-secondary-custom mb-1">Result</p>
                         <h3 class="text-accent mb-0">
-                            @Amount @FromCurrency = @ConversionResult.Value.ToString("N2") @ToCurrency
+                            @Amount @FromCurrency = @ConversionResult.Value.ToString("N4") @ToCurrency
                         </h3>
                     </div>
                 }
@@ -75,9 +76,12 @@
 
 @code {
 
-    private decimal Amount { get; set; } = 1;
-
     private string _fromCurrency = "AED";
+    private string _toCurrency = "LKR";
+    private decimal Amount { get; set; } = 1;
+    private string BaseCurrency { get; set; } = "AED";
+    private decimal? ConversionResult { get; set; }
+    private bool IsLoading { get; set; }
 
     private string FromCurrency
     {
@@ -92,7 +96,6 @@
         }
     }
 
-    private string _toCurrency = "LKR";
 
     private string ToCurrency
     {
@@ -106,10 +109,6 @@
             }
         }
     }
-
-    private string BaseCurrency { get; set; } = "AED";
-    private decimal? ConversionResult { get; set; }
-    private bool IsLoading { get; set; }
 
     private List<string> PopularCurrencies = new()
     {
@@ -127,7 +126,8 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            var encoded = Uri.EscapeDataString(ex.Message ?? "An error occurred");
+            navigationManager.NavigateTo($"/error?message={encoded}");
         }
         finally
         {

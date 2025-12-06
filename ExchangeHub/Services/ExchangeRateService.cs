@@ -24,11 +24,11 @@ public class ExchangeRateService : IExchangeRateService
         return JsonSerializer.Deserialize<ExchangeRateStandardResponse>(content);
     }
 
-    public async Task<decimal?> ConvertAsync(string from, string to, decimal amount)
+    public async Task<decimal?> ConvertAsync(string fromCurrency, string toCurrency, decimal amount)
     {
-        var rates = await GetLatestRatesAsync(from);
+        var rates = await GetLatestRatesAsync(fromCurrency);
 
-        if (rates?.ConversionRates.TryGetValue(to, out var rate) == true)
+        if (rates?.ConversionRates.TryGetValue(toCurrency, out var rate) == true)
             return amount * rate;
 
         return null;

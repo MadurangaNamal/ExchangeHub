@@ -5,5 +5,5 @@ namespace ExchangeHub.Services;
 public interface IExchangeRateService
 {
     Task<ExchangeRateStandardResponse?> GetLatestRatesAsync(string baseCurrency);
-    Task<decimal?> ConvertAsync(string from, string to, decimal amount);
+    Task<decimal?> ConvertAsync(string fromCurrency, string toCurrency, decimal amount);
 }

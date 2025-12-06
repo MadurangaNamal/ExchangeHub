@@ -1,6 +1,7 @@
 ﻿@rendermode InteractiveServer
 @page "/"
 @inject IExchangeRateService exchangeRateService;
+@inject NavigationManager navigationManager;
 
 <PageTitle>ExchangeHub</PageTitle>
 
@@ -118,7 +119,8 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            var encoded = Uri.EscapeDataString(ex.Message ?? "An error occurred");
+            navigationManager.NavigateTo($"/error?message={encoded}");
         }
         finally
         {
